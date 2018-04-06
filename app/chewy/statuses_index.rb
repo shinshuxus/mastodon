@@ -5,7 +5,6 @@ class StatusesIndex < Chewy::Index
     tokenizer: {
       kuromoji_user_dict: {
         type: 'kuromoji_tokenizer',
-        user_dictionary: 'userdic.txt',
       },
     },
     analyzer: {
