@@ -33,7 +33,7 @@ module Mastodon
     end
 
     def source_base_url
-      'https://github.com/hostdon/mastdon/tree/hostdon-latest'
+      'https://github.com/hostdon/mastodon/tree/hostdon-latest'
     end
 
     # specify git tag or commit hash here
