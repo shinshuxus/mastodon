@@ -9,11 +9,11 @@ module Mastodon
     end
 
     def minor
-      4
+      5
     end
 
     def patch
-      4
+      0
     end
 
     def pre
@@ -32,8 +32,12 @@ module Mastodon
       [to_a.join('.'), flags].join
     end
 
+    def repository
+      'tootsuite/mastodon'
+    end
+
     def source_base_url
-      'https://github.com/hostdon/mastodon/tree/hostdon-latest'
+      "https://github.com/#{repository}"
     end
 
     # specify git tag or commit hash here
