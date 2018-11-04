@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang='ja'>
+    <!--
+       This file needs "X-Frame-Options: SAMEORIGIN" header.
+    -->
+    <head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://mastportal.info/library/theme/frame.css?ver=1.0.03" media="all"  />
+
+	<style id="font_style"></style>
+	<script src="https://mastportal.info/library/theme/jquery-3.2.1.min.js"></script>
+	<script src="https://mastportal.info/library/theme/jquery.cookie.js"></script>
+	<script src="https://mastportal.info/library/theme/frame.js"></script>
+	<script>
+	    $(function () {
+		$('body', parent.document).append('<link rel="stylesheet" href="https://mastportal.info/library/theme/common.css?ver=1.2" type="text/css" media="all" />');
+		$('body', parent.document).append('<link rel="stylesheet" href="https://mastportal.info/library/theme/osomatsu.css?v=1.0.01" type="text/css" media="all" />');
+		$('body', parent.document).append('<div id="user_css"></div>');
+		$('body', parent.document).append('<style id="append_style"></style>');
+		$('body', parent.document).append('<style id="font_style"></style>');
+		change_css();
+		change_emojisize();
+		change_font();
+		$('#ika_white').click(function () {
+		    $.cookie("select_css", "ika_white", {expires: 365, path: "/"});
+		    change_css();
+		});
+		$('#ika_black').click(function () {
+		    $.cookie("select_css", "ika_black", {expires: 365, path: "/"});
+		    change_css();
+		});
+		$('#default').click(function () {
+		    $.cookie("select_css", "default", {expires: 365, path: "/"});
+		    change_css();
+		});
+		function change_css() {
+		    var cookie = $.cookie("select_css");
+		    if (!cookie || cookie == 'ika_white') {
+			$('#user_css', parent.document).html('<link rel="stylesheet" href="https://mastportal.info/library/theme/ika/white.css" type="text/css" media="all" />');
+		    } else if (cookie == 'ika_black') {
+			$('#user_css', parent.document).html('<link rel="stylesheet" href="https://mastportal.info/library/theme/ika/black.css" type="text/css" media="all" />');
+		    } else if (cookie == 'default') {
+			$('#user_css', parent.document).html('');
+		    }
+		}
+		$('#emojisize-btn').click(function () {
+		    console.log('emoji');
+		    $.cookie("emojisize", $('#emojisize').val(), {expires: 365, path: "/"});
+		    change_emojisize();
+		});
+		function change_emojisize() {
+		    console.log('change_emoji');
+		    var size = $.cookie("emojisize");
+		    var css = '';
+		    if (size != '') {
+			css = '.status__content .emojione{width:' + size + 'px;height:' + size + 'px;}';
+		    }
+		    $('#append_style', parent.document).text(css);
+		}
+		/*フォント*/
+		$('#font').change(function () {
+		    console.log('font');
+		    $.cookie("font", $('#font').val(), {expires: 365, path: "/"});
+		    change_font();
+		});
+		function change_font() {
+		    console.log('change_font');
+		    var font = $.cookie("font");
+		    console.log(font);
+		    var css = '';
+		    if (font == 'Noto' || typeof (font) == "undefined") {
+			css = '@import url(https://fonts.googleapis.com/earlyaccess/notosansjp.css);';
+			css += "*{font-family:'Noto Sans JP','07 YasashisaGothic','mastodon-font-sans-serif','sans-serif','FontAwesome' !important;}";
+		    }
+		    $('#font_style', parent.document).text(css);
+		    $('#font_style').text(css);
+		}
+		$('h2').click(function () {
+		    $(this).next().slideToggle();
+		});
+		/*
+		 $('.column-link .fa-star', parent.document).parent().html('<i class="fa fa-fw fa-star column-link__icon"></i>捕獲したトゥート');
+		 $('.notification-favourite .notification__message span', parent.document).each(function () {
+		 var html = $(this).html();
+		 $(this).html(html.replace('お気に入りに登録しました', '捕獲しました'));
+		 });
+		 var observer = new MutationObserver(function (MutationRecords, MutationObserver) {
+		 MutationRecords.forEach(function (MutationRecord) {
+		 var html = $(MutationRecord.addedNodes).find('.notification-favourite .notification__message span').html();
+		 $(MutationRecord.addedNodes).find('.notification-favourite .notification__message span').html(html.replace('お気に入りに登録しました', '捕獲しました'));
+		 });
+		 });
+		 observer.observe($('h1[aria-label="通知"]', parent.document).parent().parent().find('.item-list').get(0), {
+		 childList: true,
+		 });
+		 */
+		$('.autoset').click(function () {
+		    var text = $(this).attr('data-text');
+		    $('.autosuggest-textarea__textarea', parent.document).val($('.autosuggest-textarea__textarea', parent.document).val() + text);
+		    text = text.replace(' #', '');
+		    if ($(window, parent.document).width() > 1024) {
+			parent.window.history.pushState('', '', '/web/timelines/tag/' + text);
+			parent.window.history.pushState('', '', '/web/timelines/tag/debug');
+			parent.window.history.back();
+		    }
+		});
+		$('.autotoot').click(function () {
+		    $('.autosuggest-textarea__textarea', parent.document).val($(this).attr('data-text'));
+		    $('.compose-form__publish-button-wrapper button', parent.document).click();
+		    /*
+		     $(this).prop("disabled", true);
+		     $(this).delay(10000).queue(function () {
+		     $(this).prop("disabled", false);
+		     });
+		     */
+		});
+		$('#emoji-list img').click(function () {
+		    var text = $(this).attr('alt');
+		    $('.autosuggest-textarea__textarea', parent.document).val($('.autosuggest-textarea__textarea', parent.document).val() + ' ' + text + ' ');
+		});
+	    });
+	</script>
+
+
+    </head>
+    <body>
+	<h2><span class="theme">テーマ・</span>注意事項・初期フォローについて</h2>
+	<div class="announcements" style="display:none">
+	    <div class="theme">
+		<h3>テーマ</h3>
+		<div class="box">
+		    <button id="ika_black">イカB</button>
+		    <button id="ika_white">イカW</button>
+		    <button id="default">マストドン</button><br />
+		    <a href="https://userstyles.org/styles/141847/ikadon" target="_blank">ikadon配布元</a>
+		    <p><input id="emojisize" size="2" maxlength="2">絵文字サイズ<button id="emojisize-btn">変更</button></p>
+
+		    <p>
+			<select id="font">
+			    <option value="">フォントを変更する
+			    <option value="Noto">Noto
+			    <option value="Default">デフォルト
+			</select>
+		    </p>
+		</div>
+	    </div>
+	    <h3>注意事項</h3>
+	    <div class="box">
+		<p>公式設定を除くカップリングの話に関しては、「未収載」以下に設定してください。</p>
+		<p>ただし、自己紹介時に限り「公開」での投稿を許可します（悪用しないでください）</p>
+		<p>「性的なコンテンツ」はCW/NSFWを設定してください</p>
+		<p>サーバー及び管理人に極端に負荷をかける行為は厳禁です。</p>
+		<p>原則管理人によるアカウントの削除は行いません。可能な限りブロック・ミュートをお願いします（通報が必要だと判断した場合は通報してください）</p>
+	    </div>
+	    <h3>初期フォローについて</h3>
+	    <div class="box">
+		<p>
+		    当インスタンスでは「system01」から「system10」までと管理人の11人の初期フォローが居ます。<br />
+		    systemアカウントにつきましては今後まとめや商品情報を提供する予定となっています。<br />
+		    これらのフォローは自由に外していただいて構いません。<br />
+		    また、これらのアカウントは未収載でトゥートする予定です。
+		</p>
+	    </div>
+	</div>
+	<!--
+		<h2>相互リンク／インスタンス</h2>
+		<div class="announcements" style="display:none;">
+		    <div class="box">
+			サイトやインスタンスからリンクを貼れる方を募集しています
+		    </div>
+		</div>
+	-->
+	<h2>ショートカット</h2>
+	<div class="announcements">
+	    <div class="box">
+		<button class="autotoot" data-text="おはよう！">おはよう</button>
+		<button class="autotoot" data-text="こんにちは！">こんにちは</button>
+		<button class="autotoot" data-text="こんばんは！">こんばんは</button>
+	    </div>
+	    <div class="default-box toggle-buttons " id="hashtags">
+		<label><input type="checkbox" data-text=" #おそ松さん"><span class="button">#おそ松さん</span></label>
+		<label><input type="checkbox" data-text=" #おそ松"><span class="button">#おそ松</span></label>
+		<label><input type="checkbox" data-text=" #カラ松"><span class="button">#カラ松</span></label>
+		<label><input type="checkbox" data-text=" #チョロ松"><span class="button">#チョロ松</span></label>
+		<label><input type="checkbox" data-text=" #一松"><span class="button">#一松</span></label>
+		<label><input type="checkbox" data-text=" #十四松"><span class="button">#十四松</span></label>
+		<label><input type="checkbox" data-text=" #トド松"><span class="button">#トド松</span></label>
+		<label><input type="checkbox" data-text=" #しま松"><span class="button">#しま松</span></label>
+	    </div>
+	</div>
+	<!--
+	<h2>絵文字一覧</h2>
+	<div class="announcements">
+	    <div class="box">
+		<table id="emoji-list">
+		    <tr>
+			<th colspan="6">パーカー</th>
+		    </tr>
+		    <tr>
+			<td><img draggable="false" class="emojione" alt=":ma1a:" title=":ma1a:" src="https://media.hostdon.jp/custom_emojis/images/000/000/001/static/ma1a.png"></td>
+			<td><img draggable="false" class="emojione" alt=":ma2a:" title=":ma2a:" src="https://media.hostdon.jp/custom_emojis/images/000/000/002/static/ma2a.png"></td>
+			<td><img draggable="false" class="emojione" alt=":ma3a:" title=":ma3a:" src="https://media.hostdon.jp/custom_emojis/images/000/000/003/static/ma3a.png"></td>
+			<td><img draggable="false" class="emojione" alt=":ma4a:" title=":ma4a:" src="https://media.hostdon.jp/custom_emojis/images/000/000/004/static/ma4a.png"></td>
+			<td><img draggable="false" class="emojione" alt=":ma5a:" title=":ma5a:" src="https://media.hostdon.jp/custom_emojis/images/000/000/005/static/ma5a.png"></td>
+			<td><img draggable="false" class="emojione" alt=":ma6a:" title=":ma6a:" src="https://media.hostdon.jp/custom_emojis/images/000/000/006/static/ma6a.png"></td>
+		    </tr>
+		    <tr>
+			<th colspan="6">宗教松</th>
+		    </tr>
+		    <tr>
+			<td><img draggable="false" class="emojione" alt=":ma1b:" title=":ma1b:" src="https://media.hostdon.jp/custom_emojis/images/000/000/015/static/ma1b.png"></td>
+			<td><img draggable="false" class="emojione" alt=":ma2b:" title=":ma2b:" src="https://media.hostdon.jp/custom_emojis/images/000/000/016/static/ma2b.png"></td>
+			<td><img draggable="false" class="emojione" alt=":ma3b:" title=":ma3b:" src="https://media.hostdon.jp/custom_emojis/images/000/000/017/static/ma3b.png"></td>
+			<td><img draggable="false" class="emojione" alt=":ma4b:" title=":ma4b:" src="https://media.hostdon.jp/custom_emojis/images/000/000/018/static/ma4b.png"></td>
+			<td><img draggable="false" class="emojione" alt=":ma5b:" title=":ma5b:" src="https://media.hostdon.jp/custom_emojis/images/000/000/019/static/ma5b.png"></td>
+			<td><img draggable="false" class="emojione" alt=":ma6b:" title=":ma6b:" src="https://media.hostdon.jp/custom_emojis/images/000/000/020/static/ma6b.png"></td>
+		    </tr>
+		    <tr>
+			<th colspan="6">トト子・橋本にゃー</th>
+		    </tr>
+		    <tr>
+			<td><img draggable="false" class="emojione" alt=":totoko:" title=":totoko:" src="https://media.hostdon.jp/custom_emojis/images/000/000/022/static/totoko.png"></td>
+			<td><img draggable="false" class="emojione" alt=":nyaa:" title=":nyaa:" src="https://media.hostdon.jp/custom_emojis/images/000/000/021/static/nyaa.png"></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		    </tr>
+		    <tr>
+			<th colspan="6">アイコン</th>
+		    </tr>
+		    <tr>
+			<td><img draggable="false" class="emojione" alt=":matsu:" title=":matsu:" src="https://media.hostdon.jp/custom_emojis/images/000/000/007/static/matsu.png"></td>
+			<td><img draggable="false" class="emojione" alt=":oden:" title=":oden:" src="https://media.hostdon.jp/custom_emojis/images/000/000/008/static/oden.png"></td>
+			<td><img draggable="false" class="emojione" alt=":tissue:" title=":tissue:" src="https://media.hostdon.jp/custom_emojis/images/000/000/023/static/tissue.png"></td>
+			<td><img draggable="false" class="emojione" alt=":shoyu:" title=":shoyu:" src="https://media.hostdon.jp/custom_emojis/images/000/000/049/static/shoyu.png"></td>
+			<td><img draggable="false" class="emojione" alt=":nashi:" title=":nashi:" src="https://media.hostdon.jp/custom_emojis/images/000/000/051/static/nashi.png"></td>
+			<td></td>
+		    </tr>
+		</table>
+	    </div>
+	    <h3>絵文字の追加について</h3>
+	    <div class="box">
+		<p>
+		    カスタム絵文字をご提供頂ける方が居ましたら @matsuyo までご連絡ください。<br />
+		    絵文字の条件は以下となります。
+		</p>
+		<p>
+		    ・自分で描いたイラスト<br />
+		    ・50kb以内<br />
+		    ・透過済みpng画像<br />
+		    ・正方形であること<br />
+		    ・当インスタンス内の他のユーザーが利用するのをご了承いただける方<br />
+		    ・他インスタンスがクローンする可能性にご了承いただける方<br />
+		</p>
+	    </div>
+	</div>
+	-->
+	<div class="announcements">
+	    <script type="text/javascript">amzn_assoc_ad_type = "responsive_search_widget"; amzn_assoc_tracking_id = "mstdn-oso-22"; amzn_assoc_marketplace = "amazon"; amzn_assoc_region = "JP"; amzn_assoc_placement = ""; amzn_assoc_search_type = "search_widget";amzn_assoc_width = "265"; amzn_assoc_height = "335"; amzn_assoc_default_search_category = ""; amzn_assoc_default_search_key = "おそ松さん";amzn_assoc_theme = "light"; amzn_assoc_bg_color = "FFFFFF";</script><script src="//z-fe.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&Operation=GetScript&ID=OneJS&WS=1&Marketplace=JP"></script>
+	</div>
+    </body>
+</html>
