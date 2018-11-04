@@ -1,0 +1,468 @@
+
+<!DOCTYPE html>
+<html lang='ja'>
+    <!--
+       This file needs "X-Frame-Options: SAMEORIGIN" header.
+    -->
+    <head>
+	<meta charset='utf-8'>
+	<link rel="stylesheet" href="https://mastportal.info/library/js/mastodon-custom-emoji-oekaki-master/index.css?ver=1.0.03" media="all"  />
+	<style>
+	    body{
+		margin:0;
+	    }
+	    .announcements{
+		margin:10px;
+	    }
+	    .announcements img{
+		max-width:100%;
+	    }
+	    .box{
+		margin:0 0 10px 0;
+		font-size: 13px;
+		padding: 6px;
+		background-color: #e6e6e6;
+		color: #313543;
+		box-shadow: 0 0 15px rgba(0,0,0,.2);
+		border-radius: 4px;
+	    }
+	    h2{
+		background: #005;
+		margin: 4px 0 0 0;
+		color: #FFF;
+		padding: 4px 12px;
+		font-size: 12px;
+		font-weight:normal;
+	    }
+	    h2::after{
+		content: '▼';
+		position: absolute;
+		right: 20px;
+		cursor:pointer;
+	    }
+	    h3{
+		margin:4px 0;
+	    }
+	    button {
+		background: #FFF;
+		border: 1px #888 solid;
+		margin: 2px 2px 2px 0;
+		color: #444;
+		border-radius: 6px;
+		font-size: 11px;
+		min-height: 20px;
+	    }
+	    button:disabled {
+		background:#DDD;
+	    }
+	    .link a{
+		display:block;
+		background: #FFF;
+		border: 1px #888 solid;
+		margin: 2px 2px 4px 0;
+		color: #444;
+		border-radius: 6px;
+		text-align:center;
+		text-decoration: none;
+		padding:2px 0;
+	    }
+	    ::-webkit-scrollbar {
+		height: 20px;
+	    }
+	    ::-webkit-scrollbar {
+		width: 0px;
+		height: 8px;
+	    }
+	    ::-webkit-scrollbar-corner {
+		background: transparent;
+	    }
+	    ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:hover {
+		/* background: rgba(255, 255, 255, .5); */
+		background: rgba(0, 100, 150, .3);
+	    }
+	    ::-webkit-scrollbar-thumb {
+		border-radius: 0;
+	    }
+	    ::-webkit-scrollbar-thumb {
+		background: #313543;
+		border: 0 none #fff;
+		border-radius: 50px;
+	    }
+	    ::-webkit-scrollbar-track {
+		border: 0 none #fff;
+		border-radius: 0;
+		background: rgba(0,0,255,.1);
+	    }
+	    #emoji-list table{
+		width:100%;
+	    }
+	    #emoji-list img{
+		width:auto;
+		max-height:40px;
+		cursor:pointer;
+	    }
+	    .slide{
+		cursor:pointer;
+	    }
+	</style>
+	<style id="append_style"></style>
+
+	<script src="https://mastportal.info/library/theme/jquery-3.2.1.min.js"></script>
+	<script src="https://mastportal.info/library/js/mastodon-custom-emoji-oekaki-master/index.js?ver=1.0.05"></script>
+	<script src="https://mastportal.info/library/theme/jquery.cookie.js"></script>
+	<script>
+	    $(function () {
+		var language = $('html', parent.document).attr('lang');
+		var lang = 0;
+		if (language !== 'ja') {
+		    lang = 1;
+		    language = 'en';
+		}
+		/*
+		 var dic = [
+		 ["お気に入りに登録しました", "favourited your status"],
+		 ["捕獲しました", "Captured"],
+		 ["通知", "Notifications"],
+		 ["捕獲したトゥート", "Captured toot"],
+		 ["", ""],
+		 ["", ""],
+		 ]
+		 */
+		$('body', parent.document).append('<link rel="stylesheet" href="https://mastportal.info/library/theme/common.css?ver=1.1" type="text/css" media="all" />');
+		$('body', parent.document).append('<link rel="stylesheet" href="https://mastportal.info/library/theme/animal.css?v=1.0.01" type="text/css" media="all" />');
+		$('body', parent.document).append('<div id="user_css"></div>');
+		showLanguage(language);
+		$('body', parent.document).append('<style id="append_style"></style>');
+		change_css();
+		change_style();
+		$('#ika_white').click(function () {
+		    $.cookie("select_css", "ika_white", {expires: 365, path: "/"});
+		    change_css();
+		});
+		$('#ika_black').click(function () {
+		    $.cookie("select_css", "ika_black", {expires: 365, path: "/"});
+		    change_css();
+		});
+		$('#default').click(function () {
+		    console.log('default');
+		    $.cookie("select_css", "default", {expires: 365, path: "/"});
+		    change_css();
+		});
+		/*フォント*/
+		$('#font').change(function () {
+		    console.log('font');
+		    $.cookie("font", $('#font').val(), {expires: 365, path: "/"});
+		    change_style();
+		});
+		$('#emojisize-btn').click(function () {
+		    console.log('emoji');
+		    $.cookie("emojisize", $('#emojisize').val(), {expires: 365, path: "/"});
+		    change_style();
+		});
+		$('#columnsize-btn').click(function () {
+		    console.log('column');
+		    $.cookie("columnsize", $('#columnsize').val(), {expires: 365, path: "/"});
+		    change_style();
+		});
+		function change_css() {
+		    var cookie = $.cookie("select_css");
+		    if (!cookie || cookie == 'ika_white') {
+			$('#user_css', parent.document).html('<link rel="stylesheet" href="https://mastportal.info/library/theme/ika/white.css" type="text/css" media="all" />');
+		    } else if (cookie == 'ika_black') {
+			$('#user_css', parent.document).html('<link rel="stylesheet" href="https://mastportal.info/library/theme/ika/black.css" type="text/css" media="all" />');
+		    } else if (cookie == 'default') {
+			$('#user_css', parent.document).html('');
+		    }
+		}
+		function change_style() {
+		    var css = '';
+		    console.log('change_font');
+		    var font = $.cookie("font");
+		    console.log(font);
+		    if (font == 'Noto' || typeof (font) == "undefined") {
+			css += '@import url(https://fonts.googleapis.com/earlyaccess/notosansjp.css);' + "\n";
+			css += "*{font-family:'Noto Sans JP','07 YasashisaGothic','mastodon-font-sans-serif','sans-serif','FontAwesome' !important;}" + "\n";
+		    }
+		    console.log('change_emoji');
+		    var size = $.cookie("emojisize");
+		    if (size != '') {
+			css += '.status__content .emojione{width:' + size + 'px;height:' + size + 'px;}' + "\n";
+			$('#emojisize').val(size);
+		    }
+		    console.log('change_column');
+		    var size = $.cookie("columnsize");
+		    if (size != '') {
+			css += '.column{width:calc(' + size + 'px + 10px);}' + "\n";
+			$('#columnsize').val(size);
+		    }
+		    $('#append_style', parent.document).text(css);
+		    $('#append_style').text(css);
+		}
+		/*
+		 function change_emojisize() {
+		 console.log('change_emoji');
+		 var size = $.cookie("emojisize");
+		 var css = '';
+		 if (size != '') {
+		 css = '.status__content .emojione{width:' + size + 'px;height:' + size + 'px;}';
+		 }
+		 $('#append_style', parent.document).text(css);
+		 }
+		 function change_column() {
+		 console.log('change_column');
+		 var size = $.cookie("columnsize");
+		 var css = '';
+		 if (size != '') {
+		 size += 10;
+		 css = '.column{width:' + size + 'px;}';
+		 }
+		 $('#append_style', parent.document).text(css);
+		 }
+		 function change_font() {
+		 console.log('change_font');
+		 var font = $.cookie("font");
+		 console.log(font);
+		 var css = '';
+		 if (font == 'Noto' || typeof (font) == "undefined") {
+		 css = '@import url(https://fonts.googleapis.com/earlyaccess/notosansjp.css);';
+		 css += "*{font-family:'Noto Sans JP','07 YasashisaGothic','mastodon-font-sans-serif','sans-serif','FontAwesome' !important;}";
+		 }
+		 $('#font_style', parent.document).text(css);
+		 $('#font_style').text(css);
+		 }
+		 */
+		$('.slide').click(function () {
+		    $(this).next().slideToggle();
+		});
+		$('.autoset').click(function () {
+		    console.log('autoset');
+		    var text = $(this).attr('data-text');
+		    $('.autosuggest-textarea__textarea', parent.document).val($('.autosuggest-textarea__textarea', parent.document).val() + text);
+		    text = text.replace(' #', '');
+		    parent.window.history.pushState('', '', '/web/timelines/tag/' + text);
+		    parent.window.history.pushState('', '', '/web/timelines/tag/debug');
+		    parent.window.history.back();
+		});
+		$('.autotoot').click(function () {
+		    $('.autosuggest-textarea__textarea', parent.document).val($(this).attr('data-text'));
+		    $('.compose-form__publish-button-wrapper button', parent.document).click();
+		    /*
+		     $(this).prop("disabled", true);
+		     $(this).delay(10000).queue(function () {
+		     $(this).prop("disabled", false);
+		     });
+		     */
+		});
+		$('#emoji-list img').click(function () {
+		    var text = $(this).attr('alt');
+		    $('.autosuggest-textarea__textarea', parent.document).val($('.autosuggest-textarea__textarea', parent.document).val() + ' ' + text + ' ');
+		});
+		$('#omikuji').click(function () {
+		    var omikuji = ['大吉', '中吉', '小吉', '末吉', '凶', '大凶'];
+		    $('.autosuggest-textarea__textarea', parent.document).val(omikuji[random(0, omikuji.length)]);
+		    $('.compose-form__publish-button-wrapper button', parent.document).click();
+		});
+		function random(min, max) {
+		    return Math.floor(Math.random() * (max + 1 - min)) + min;
+		}
+	    });
+	    function showLanguage(lang) {
+		var langSet = ["ja", "en"];     // 切り替え対象の locale リスト
+		for (var i = 0; i < langSet.length; i++) {
+		    console.log(langSet[i]);
+		    if (lang === langSet[i]) {
+			$('.' + langSet[i]).show();
+		    } else {
+			$('.' + langSet[i]).hide();
+		    }
+		}
+		/*setLang(lang);*/
+	    }
+	    /*
+	     function setLang(lang) {
+	     $.cookie("lang", lang, {expires: 365, path: "/"});
+	     }
+	     */
+	</script>
+
+    </head>
+    <body>
+	<div class="ja">
+	    <h2 class="slide"><span class="theme">テーマ・</span>注意事項・初期フォローについて</h2>
+	    <div class="announcements" style="display:none">
+		<div class="theme">
+		    <h3>テーマ</h3>
+		    <div class="box">
+			<button id="ika_black">イカB</button>
+			<button id="ika_white">イカW</button>
+			<button id="default">マストドン</button><br />
+			<a href="https://userstyles.org/styles/141847/ikadon" target="_blank">ikadon配布元</a>
+			<p><input id="emojisize" size="2" maxlength="2"><button id="emojisize-btn">絵文字サイズ変更</button></p>
+			<p><input id="columnsize" size="4" maxlength="4"><button id="columnsize-btn">カラムサイズ変更</button></p>
+			<p>
+			    <select id="font">
+				<option value="">フォントを変更する
+				<option value="Noto">Noto
+				<option value="Default">デフォルト
+			    </select>
+			</p>
+		    </div>
+		</div>
+		<h3>注意事項</h3>
+		<div class="box">
+		    <p>特に厳しい制限は設けませんがR-18コンテンツはCW/NSFW問わず禁止です</p>
+		    <p>サーバー及び管理人に極端に負荷をかける行為は厳禁です。</p>
+		    <p>管理人以外によるボット・アプリ連携による自動トゥート行為は基本的に禁止です。何らかのアプリを動かしたい場合は@natsuki までご連絡ください</p>
+		</div>
+		<h3>初期フォローについて</h3>
+		<div class="box">
+		    <p>
+			当インスタンスでは「system01」から「system10」までと管理人の11人の初期フォローが居ます。<br />
+			systemアカウントにつきましては今後まとめや商品情報を提供する予定となっています。<br />
+			これらのフォローは自由に外していただいて構いません。<br />
+			また、これらのアカウントは未収載でトゥートする予定です。
+		    </p>
+		</div>
+	    </div>
+
+	    <h2 class="slide">相互サイト・インスタンス・生放送</h2>
+	    <div class="announcements" style="display:none;">
+		<div class="box link">
+		    サイトやインスタンスからリンクを貼れる方を募集しています
+		</div>
+	    </div>
+	    <h2 class="slide">ショートカット</h2>
+
+	    <div class="announcements">
+		<!--
+		<div class="box">
+		    <button class="autotoot" data-text="@kiri_bot01 1">1</button>
+		    <button class="autotoot" data-text="@kiri_bot01 2">2</button>
+		    <button class="autotoot" data-text="@kiri_bot01 3">3</button>
+		    <button class="autotoot" data-text="@kiri_bot01 4">4</button>
+		    <button class="autotoot" data-text="@kiri_bot01 5">5</button>
+		    <button class="autotoot" data-text="@kiri_bot01 6">6</button>
+		    <button class="autotoot" data-text="@kiri_bot01 7">7</button>
+		    <button class="autotoot" data-text="@kiri_bot01 8">8</button>
+		    <button class="autotoot" data-text="@kiri_bot01 9">9</button>
+		    <button class="autotoot" data-text="@kiri_bot01 10">10</button>
+		    <button class="autotoot" data-text="@kiri_bot01 11">11</button>
+		    <button class="autotoot" data-text="@kiri_bot01 12">12</button>
+		    <button class="autotoot" data-text="@kiri_bot01 13">13</button>
+		    <button class="autotoot" data-text="@kiri_bot01 14">14</button>
+		    <button class="autotoot" data-text="@kiri_bot01 15">15</button>
+		    <button class="autotoot" data-text="@kiri_bot01 16">16</button>
+		    <button class="autotoot" data-text="@kiri_bot01 17">17</button>
+		    <button class="autotoot" data-text="@kiri_bot01 18">18</button>
+		    <button class="autotoot" data-text="@kiri_bot01 19">19</button>
+		    <button class="autotoot" data-text="@kiri_bot01 20">20</button>
+		    <button class="autotoot" data-text="@kiri_bot01 help">help</button>
+		    <button class="autotoot" data-text="@kiri_bot01 score">score</button>
+		    <button class="autotoot" data-text="@kiri_bot01 result">result</button>
+		</div>
+		-->
+		<div class="box">
+		    <button class="autotoot" data-text="おはよう">おはよう</button>
+		    <button class="autotoot" data-text="こんにちは">こんにちは</button>
+		    <button class="autotoot" data-text="こんばんは">こんばんは</button>
+		    <button class="autotoot" data-text="はじめまして！">はじめまして</button>
+		</div>
+		<div class="box">
+		    <button class="autoset" data-text=" #フレンド募集">#フレンド募集</button>
+		    <button class="autoset" data-text=" #ポケ森">#ポケ森</button>
+		</div>
+		<div class="box">
+		    <button id="omikuji" data-text="">おみくじ</button>
+		</div>
+	    </div>
+	    <h2 class="slide">カスタム絵文字（準備中）</h2>
+	    <div class="announcements" style="display:none;">
+		<div class="box" id="emoji-list">
+		    <h3 class="slide"></h3>
+		    <table style="display:none;">
+		    </table>
+		</div>
+		<h3>絵文字の追加について</h3>
+		<div class="box">
+		    <p>
+			カスタム絵文字をご提供頂ける方が居ましたら @natsuki までご連絡ください。<br />
+			絵文字の条件は以下となります。
+		    </p>
+		    <p>
+			・自分で描いたイラスト<br />
+			・50kb以内<br />
+			・透過済みpng画像<br />
+			・正方形であること<br />
+			・当インスタンス内の他のユーザーが利用するのをご了承いただける方<br />
+			・他インスタンスがクローンする可能性にご了承いただける方<br />
+		    </p>
+		</div>
+	    </div>
+	    <h2 class="slide">テスト中</h2>
+	    <div class="announcements">
+		<div class="cont_left">
+		    <div id="tiles"></div>
+		</div>
+
+		<div class="cont_right">
+		    <div id="emoji_palette"></div>
+		</div>
+	    </div>
+	    <!--
+			<div class="announcements">
+			    <script type="text/javascript">amzn_assoc_ad_type = "responsive_search_widget";
+			amzn_assoc_tracking_id = "mstdn-pokemon-22";
+			amzn_assoc_marketplace = "amazon";
+			amzn_assoc_region = "JP";
+			amzn_assoc_placement = "";
+			amzn_assoc_search_type = "search_widget";
+			amzn_assoc_width = "265";
+			amzn_assoc_height = "320";
+			amzn_assoc_default_search_category = "";
+			amzn_assoc_default_search_key = "ポケットモンスター";
+			amzn_assoc_theme = "light";
+			amzn_assoc_bg_color = "FFFFFF";</script><script src="//z-fe.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&Operation=GetScript&ID=OneJS&WS=1&Marketplace=JP"></script>
+			</div>
+	    -->
+
+
+
+	</div>
+	<div class="en">
+	    <h2 class="slide"><span class="theme">Theme</span></h2>
+	    <div class="announcements" style="display:none">
+		<div class="theme">
+		    <h3>Theme</h3>
+		    <div class="box">
+			<button class="ika_black">SplaB</button>
+			<button class="ika_white">SplaW</button>
+			<button class="default">Mastodon</button><br />
+		    </div>
+		</div>
+	    </div>
+
+	    <h2 class="slide">Shortcut Key</h2>
+	    <div class="announcements">
+		<div class="box">
+		    <button class="autotoot" data-text="Hello!">Hello!</button>
+		    <button class="autotoot" data-text="Morning all!">Good Morning!</button>
+		    <button class="autotoot" data-text="Good evening!">Good evening!</button>
+		    <button class="autotoot" data-text="Nice to meet you.">Nice to meet you.</button>
+		</div>
+		<div class="box">
+		</div>
+	    </div>
+
+
+	</div>
+
+
+
+
+
+
+
+
+
+    </body>
+</html>
