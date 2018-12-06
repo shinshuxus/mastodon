@@ -11,15 +11,17 @@
 
 	<script src="https://mastportal.info/library/theme/jquery-3.2.1.min.js"></script>
 	<script src="https://mastportal.info/library/theme/jquery.cookie.js"></script>
-	<script src="https://mastportal.info/library/theme/frame.js"></script>
+	<script src="https://mastportal.info/library/theme/frame_pokemon.js?ver=1.0.1"></script>
 	<script>
 	    $( function () {
 		var language = $( 'html', parent.document ).attr( 'lang' );
 		var lang = 0;
-		if ( language !== 'ja' ) {
-		    lang = 1;
-		    language = 'en';
-		}
+		/*
+		 if ( language !== 'ja' ) {
+		 lang = 1;
+		 language = 'en';
+		 }
+		 */
 		var dic = [
 		    [ "お気に入りに登録しました", "favourited your status" ],
 		    [ "捕獲しました", "Captured" ],
@@ -29,14 +31,15 @@
 		    [ "", "" ],
 		]
 		showLanguage( language );
-		$( 'body', parent.document ).append( '<link rel="stylesheet" href="https://mastportal.info/library/theme/common.css?ver=1.0.4" type="text/css" media="all" />' );
-		$( 'body', parent.document ).append( '<link rel="stylesheet" href="https://mastportal.info/library/theme/pokemon.css?v=1.0.01" type="text/css" media="all" />' );
+		$( 'body', parent.document ).append( '<link rel="stylesheet" href="https://mastportal.info/library/theme/common.css?ver=1.0.5" type="text/css" media="all" />' );
+		$( 'body', parent.document ).append( '<link rel="stylesheet" href="https://mastportal.info/library/theme/pokemon.css?ver=1.0.02" type="text/css" media="all" />' );
 		$( 'body', parent.document ).append( '<div id="user_css"></div>' );
 		$( 'body', parent.document ).append( '<style id="append_style"></style>' );
 		$( 'body', parent.document ).append( '<style id="font_style"></style>' );
 		change_css();
 		change_emojisize();
 		change_font();
+
 		$( '#ika_white' ).click( function () {
 		    $.cookie( "select_css", "ika_white", { expires: 365, path: "/" } );
 		    change_css();
@@ -50,12 +53,13 @@
 		    $.cookie( "select_css", "default", { expires: 365, path: "/" } );
 		    change_css();
 		} );
+
 		function change_css() {
 		    var cookie = $.cookie( "select_css" );
 		    if ( !cookie || cookie == 'ika_white' ) {
-			$( '#user_css', parent.document ).html( '<link rel="stylesheet" href="https://mastportal.info/library/theme/ika/white.css" type="text/css" media="all" />' );
+			$( '#user_css', parent.document ).html( '<link rel="stylesheet" href="https://mastportal.info/library/theme/ika/white.css?ver=1.0.1" type="text/css" media="all" />' );
 		    } else if ( cookie == 'ika_black' ) {
-			$( '#user_css', parent.document ).html( '<link rel="stylesheet" href="https://mastportal.info/library/theme/ika/black.css" type="text/css" media="all" />' );
+			$( '#user_css', parent.document ).html( '<link rel="stylesheet" href="https://mastportal.info/library/theme/ika/black.css?ver=1.0.1" type="text/css" media="all" />' );
 		    } else if ( cookie == 'default' ) {
 			$( '#user_css', parent.document ).html( '' );
 		    }
@@ -92,6 +96,9 @@
 		    $( '#font_style', parent.document ).text( css );
 		    $( '#font_style' ).text( css );
 		}
+
+
+
 		$( '.slide' ).click( function () {
 		    $( this ).next().slideToggle();
 		} );
@@ -111,6 +118,7 @@
 			childList: true,
 		    } );
 		}
+
 		$( '.autoset' ).click( function () {
 		    console.log( 'autoset' );
 		    var text = $( this ).attr( 'data-text' );
@@ -139,6 +147,7 @@
 		    text = text.replace( /[Ａ-Ｚａ-ｚ０-９]/g, function ( s ) {
 			return String.fromCharCode( s.charCodeAt( 0 ) - 0xFEE0 );
 		    } );
+
 		    text = text.toLowerCase();
 		    text = text.replace( /([a-z]{1})/g, " :201$1: " );
 		    text = text.replace( /!/g, " :201_ex: " );
@@ -171,6 +180,8 @@
 		    $( '.autosuggest-textarea__textarea', parent.document ).val( $( this ).attr( 'data-text' ) + pokemon[i] );
 		    $( '.compose-form__publish-button-wrapper button', parent.document ).click();
 		} );
+
+
 		function random( min, max ) {
 		    return Math.floor( Math.random() * ( max + 1 - min ) ) + min;
 		}
@@ -224,6 +235,7 @@
 	    <h2 class="slide">ショートカット</h2>
 
 	    <div class="announcements">
+
 		<!--
 		<div class="box">
 		    <button class="autotoot" data-text="@kiri_bot01 1">1</button>
@@ -266,16 +278,17 @@
 		    <button id="pokekuji" data-text="">ポケくじ</button>
 		    <button id="unknown-btn">アンノーン変換</button>
 		</div>
-		<div class="box">
+		<div class="toggle-buttons box">
 		    <form action="https://mamemomonga.github.io/mastodon-custom-emoji-oekaki/#pokemon.mastportal.info">
 			<button type="submit" formtarget="_blank">お絵かきツール</button>
 		    </form>
+		    <label><input type="checkbox" data-text="1" id="autochange" value="1" checked><span class="button">絵文字自動変換</span></label>
 		</div>
 	    </div>
 	    <h2 class="slide">イベント</h2>
 	    <div class="announcements">
 		<div class="box">
-		    <iframe src="https://pokemon.mastportal.info/@Araki_D/100814282749961349/embed" class="mastodon-embed" style="max-width: 100%; border: 0" width="400"></iframe><script src="https://pokemon.mastportal.info/embed.js" async="async"></script>
+		    <iframe src="https://pokemon.mastportal.info/@Araki_D/101041860212823097/embed" class="mastodon-embed" style="max-width: 100%; border: 0" width="400"></iframe><script src="https://pokemon.mastportal.info/embed.js" async="async"></script>
 		</div>
 
 	    </div>
@@ -1164,7 +1177,7 @@
 		<h3>絵文字の追加について</h3>
 		<div class="box">
 		    <p>
-			カスタム絵文字をご提供頂ける方が居ましたら @natsuki までご連絡ください。<br />
+			カスタム絵文字をご提供頂ける方が居ましたらダイレクトメッセージで @natsuki までご連絡ください。<br />
 			絵文字の条件は以下となります。
 		    </p>
 		    <p>
@@ -1175,6 +1188,7 @@
 			・当インスタンス内の他のユーザーが利用するのをご了承いただける方<br />
 			・他インスタンスがクローンする可能性にご了承いただける方<br />
 			・ポケモンは図鑑No添えてくれると助かります<br />
+			・登録した絵文字の削除は投稿された過去に内容に影響がでるため極力控えたいと考えております。アカウント削除時等に絵文字を削除したいとお考えの場合はご遠慮ください<br />
 		    </p>
 		</div>
 	    </div>
@@ -1197,22 +1211,6 @@
 		    サイトやインスタンスからリンクを貼れる方を募集しています
 		</div>
 	    </div>
-
-	    <div class="announcements">
-		<script type="text/javascript">amzn_assoc_ad_type = "responsive_search_widget";
-	    amzn_assoc_tracking_id = "mstdn-pokemon-22";
-	    amzn_assoc_marketplace = "amazon";
-	    amzn_assoc_region = "JP";
-	    amzn_assoc_placement = "";
-	    amzn_assoc_search_type = "search_widget";
-	    amzn_assoc_width = "265";
-	    amzn_assoc_height = "320";
-	    amzn_assoc_default_search_category = "";
-	    amzn_assoc_default_search_key = "ポケットモンスター";
-	    amzn_assoc_theme = "light";
-	    amzn_assoc_bg_color = "FFFFFF";</script><script src="//z-fe.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&Operation=GetScript&ID=OneJS&WS=1&Marketplace=JP"></script>
-	    </div>
-
 
 
 
@@ -1241,21 +1239,21 @@
 		    <button class="autotoot" data-text="Paras🍄">Paras</button>
 		</div>
 		<div class="box">
-		    <label><input type="checkbox" data-text= #pokemon">#pokemon</button>
-			<label><input type="checkbox" data-text= #anipoke">#anipoke</button>
-			    </div>
-			    </div>
+		    <label><input type="checkbox" data-text= #pokemon">#pokemon</label>
+		    <label><input type="checkbox" data-text= #anipoke">#anipoke</label>
+		</div>
+	    </div>
 
 
-			    </div>
-
-
-
+	</div>
 
 
 
 
 
 
-			    </body>
+
+
+
+    </body>
 </html>
