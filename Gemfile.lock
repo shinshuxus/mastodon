@@ -355,6 +355,9 @@ GEM
       mini_portile2 (~> 2.3.0)
     nokogumbo (2.0.0)
       nokogiri (~> 1.8, >= 1.8.4)
+    noxa-sidekiq-killer (0.1.0)
+      get_process_mem
+      sidekiq
     nsa (0.2.4)
       activesupport (>= 4.2, < 6)
       concurrent-ruby (~> 1.0.0)
@@ -708,6 +711,7 @@ DEPENDENCIES
   mime-types (~> 3.2)
   net-ldap (~> 0.10)
   nokogiri (~> 1.8)
+  noxa-sidekiq-killer
   nsa (~> 0.2)
   oj (~> 3.7)
   omniauth (~> 1.2)
