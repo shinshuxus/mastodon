@@ -12,7 +12,6 @@ Sidekiq.configure_server do |config|
 
   config.server_middleware do |chain|
     chain.add SidekiqErrorHandler
-    chain.add Sidekiq::Killer::Memory, max_rss: 270, grace_time: 0, shutdown_wait: (15 * 60), shutdown_signal: 'SIGKILL'
   end
 end
 
