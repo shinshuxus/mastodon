@@ -108,7 +108,6 @@ class Compose extends React.PureComponent {
             <NavigationContainer onClose={this.onBlur} />
 
             <ComposeFormContainer />
-            <iframe src="/notice.html" height="100%" width="100%"></iframe>
             <div className='drawer__inner__mastodon'>
               <img alt='' draggable='false' src={mascot || elephantUIPlane} />
             </div>
